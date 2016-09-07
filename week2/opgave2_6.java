@@ -3,22 +3,24 @@ package week2;
 
 /*Write a program that produces the following output. Use a class constant to make it
 possible to change the number of stairs in the figure.
-				    o  *******
-				   /|\ *	   *
-				   / \ *	   *
-			    o  ******	   *
-			   /|\ * 		   *
-			   / \ * 		   *
-		   o  ****** 		   *
-		  /|\ * 			   *
-		  / \ * 			   *
- 	  o  ****** 			   *
- 	 /|\ * 					   *
- 	 / \ *					   *
-  o ****** 					   *
- /|\ * 						   *
- / \ *						   *
+
+				     o  *******
+				    /|\ *      *
+				    / \ *      *
+			    o  ******      *
+			   /|\ *           *
+			   / \ *           *
+		   o  ******           *
+		  /|\ *                *
+		  / \ *                *
+ 	  o  ******                *
+ 	 /|\ *                     *
+ 	 / \ *                     *
+  o ******                     *
+ /|\ *                         *
+ / \ *                         *
 ********************************
+
 */
 public class opgave2_6 {
 	private final static int stairs = 5;
@@ -27,6 +29,8 @@ public class opgave2_6 {
 	
 	
 	public static void main(String[] args) {
+		
+		printMan();
 		
 		for(int i = 1; i <= stairs; i++){
 			
@@ -38,6 +42,13 @@ public class opgave2_6 {
 		printFloor();
 		
 	}
+	
+	public static void printMan(){
+		printHead();
+		printBody();
+		printFeet();
+	}
+	
 	public static void printHead(){
 		System.out.println("  o  *******");
 	}
