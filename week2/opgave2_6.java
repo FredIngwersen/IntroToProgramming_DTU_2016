@@ -4,18 +4,18 @@ package week2;
 /*Write a program that produces the following output. Use a class constant to make it
 possible to change the number of stairs in the figure.
 
-				     o  *******
-				    /|\ *      *
-				    / \ *      *
-			    o  ******      *
-			   /|\ *           *
-			   / \ *           *
-		   o  ******           *
-		  /|\ *                *
-		  / \ *                *
- 	  o  ******                *
- 	 /|\ *                     *
- 	 / \ *                     *
+                     o  ********
+                    /|\ *      *
+                    / \ *      *
+                o  ******      *
+               /|\ *           *
+               / \ *           *
+           o  ******           *
+          /|\ *                *
+          / \ *                *
+      o  ******                *
+     /|\ *                     *
+     / \ *                     *
   o ******                     *
  /|\ *                         *
  / \ *                         *
