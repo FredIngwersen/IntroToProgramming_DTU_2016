@@ -7,7 +7,7 @@ public class RandomWalk {
 
 	public static void main(String[] args) {
 		
-		runSimulation(10, 6, 4);
+		runSimulation(5, 4, 2);
 		
 	}
 
