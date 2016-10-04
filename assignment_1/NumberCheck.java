@@ -4,49 +4,37 @@ public class NumberCheck {
 
 	public static void main(String[] args) {
 		
-		System.out.println(check("0"));
+		System.out.println(check("83535"));
 		
 	}
 	
 	public static boolean check(String number){
-		
-		// Checking for a "0" at the start of the string, 
-		// if a "0" is found; it will be removed.
-		// Unless this is the only digit.
-		if(number.length() > 1){
-			while(Integer.parseInt(number.substring(0, 1)) == 0){
-				number = number.substring(1);
-			}
-		}
+
+		// Declaring three variables
 		int doubleNumber = 0; int crossSum = 0; int Cnumber;		
 		
 		for(int i = 0; i < number.length(); i++){
 			
+			// Because I will be counting backwards, I will make the following variable
+			int flipi = number.length() - i;
+			
 			// Parsing the string into an integer
-			Cnumber = Integer.parseInt(number.substring(i, i + 1));
+			Cnumber = Integer.parseInt(number.substring((flipi - 1), flipi));
 			
 			// Checking if the index is even
-			if(i % 2 == 0){
+			if(i % 2 != 0){
 				
-				// Checking if double the digit is < 10
+				// Checking if double the digit is < 10, 
 				if(Cnumber * 2 < 10){
-					
 					doubleNumber = Cnumber * 2;
-				} else {
-					doubleNumber = ((Cnumber * 2) % 10) + 1;
-				}
-			} else {
-				doubleNumber = Cnumber;
-			}
+				} else doubleNumber = ((Cnumber * 2) % 10) + 1;
+			} else doubleNumber = Cnumber;
 			
-			crossSum = crossSum + doubleNumber;
+			crossSum += doubleNumber;
 		}
 		if(crossSum % 10 == 0){
 			return true;
-		} else {
-			return false;
-		}
-		
+		} else return false;		
 	}
 	
 }
