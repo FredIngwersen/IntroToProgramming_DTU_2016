@@ -29,17 +29,27 @@ public class tickets {
         //The UI of the program is running in a while loop. If anything but T is pressed the program will keep running. 
         //If T is pressed though, the while loop will be skipped and thus the program will terminate, shutdown message will be printed according to the last string.
         while (!input.equals("T")) {
-            //The following initializes our variable input and prints the ticket graphics.
-            input = "";
-            System.out.println("****************************");
-            System.out.println(" The time is " + time);
-            System.out.println(" Parking time until " + parktime);
-            System.out.println(" Please insert Coins");
-            System.out.println(" C - Cancel");
-            System.out.println(" B - Buy");
-            System.out.println("****************************"); 
-            input = scanner.nextLine();
-             
+        	if(total == 120){
+                input = "";
+                System.out.println("****************************");
+                System.out.println(" The time is " + time);
+                System.out.println(" Parking time until " + parktime);
+                System.out.println(" C - Cancel");
+                System.out.println(" B - Buy");
+                System.out.println("****************************"); 
+                input = scanner.nextLine();
+        	} else {
+	            //The following initializes our variable input and prints the ticket graphics.
+	            input = "";
+	            System.out.println("****************************");
+	            System.out.println(" The time is " + time);
+	            System.out.println(" Parking time until " + parktime);
+	            System.out.println(" Please insert Coins");
+	            System.out.println(" C - Cancel");
+	            System.out.println(" B - Buy");
+	            System.out.println("****************************"); 
+	            input = scanner.nextLine();
+        	}
             //A nested if statement which controls if the input from the scanner is exactly as shown below. This prevents illegal coins to be inserted to the program.
             if (input.equals("1") || input.equals("2") || input.equals("5") || input.equals("10") || input.equals("20")) {
                  
@@ -53,7 +63,7 @@ public class tickets {
                     //An if statement which controls amount of coins which is inserted. If the amount exceeds 60 and more than 120 minutes have been bought, it will
                     //return coins accordingly to the minutes above 120 that is paid for. 140 minutes bought will return 10 coins, print message and return a total_reached value of true,
                     //thus skipping above if statement.
-                    if (total > 120) {
+                    if (total >= 120) {
                         change = (total % 120) / 2;
                         System.out.println("Maximum Parking time reached. " + change + " dkk returned.");
                         minutes -= coin * 2;
@@ -62,7 +72,7 @@ public class tickets {
                     }
                      
                     //An if statement which correctly controls the time. If minutes passes 60, it will be reduced to 0 and hours will be raised by 1.
-                    if (minutes > 60) {
+                    if (minutes >= 60) {
                         minutes = minutes % 60;
                         hours += 1;
                         if (hours >= 24) {
