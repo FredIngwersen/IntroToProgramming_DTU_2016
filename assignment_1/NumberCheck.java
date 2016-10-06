@@ -10,7 +10,7 @@ public class NumberCheck {
 	
 	public static boolean check(String number){
 
-		// Declaring three variables
+		// Declaring three variables			|Converted Number|
 		int doubleNumber = 0; int crossSum = 0; int Cnumber;		
 		
 		for(int i = 0; i < number.length(); i++){

@@ -13,11 +13,13 @@ public class RandomWalk2 {
 		
 		Random grid = new Random();
 		
+		// Declaring random points for the particles
 		int pointX_1 = grid.nextInt(n);	int pointY_1 = grid.nextInt(n);
 		int pointX_2 = grid.nextInt(n);	int pointY_2 = grid.nextInt(n);
 		
 		int moveParticle_1 = 0;
 		
+		// Writing out the starting values and positions
 		System.out.println("n=" + n + " t=" + t + " s=" + s);
 		printPositions(pointX_1, pointY_1, pointX_2, pointY_2);
 		
@@ -83,7 +85,7 @@ public class RandomWalk2 {
 	}
 }
 
-
+// I kept this because I was not certain that my "getNewPosition2" method would work properly.
 /*
 
  			// If x has the largest difference
