@@ -33,7 +33,7 @@ public class Arrays3 {
 		return modeValue;
 	}
 	
-	public static int modeX(int[] a){
+/*	public static int modeX(int[] a){
 		
 		int[] count = [];
 		
@@ -51,5 +51,5 @@ public class Arrays3 {
 			}
 		}
 		return modeValue;
-	}
+	}*/
 }
