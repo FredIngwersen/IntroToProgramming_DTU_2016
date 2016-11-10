@@ -6,83 +6,74 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class serverSide {
+	public static void main (String[] args) throws IOException {
+		File file = new File("");
+		//System.out.println(file);
+		System.out.println(generateHeader(file));
 
-	public static void main(String[] args) {
-		boolean client = true;
+		ServerSocket MyServerSocket = new ServerSocket(80);
+		boolean serverActive = true;
+		while (serverActive == true) {
+			Socket clientSocket = MyServerSocket.accept();	
+			BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
+			BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
+			//String header = generateHeader(file);
 
-		ServerSocket MyServerSocket = null;
-		try {
-			MyServerSocket = new ServerSocket(80);
-
-
-			while(client == true){
-				BufferedInputStream bis;
-				BufferedOutputStream bos;
-
-
-				Socket clientSocket = MyServerSocket.accept();
-
-				BufferedReader bir = new BufferedReader(
-						new InputStreamReader(clientSocket.getInputStream()));
-
-				PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
-
-				bis = new BufferedInputStream(clientSocket.getInputStream());
-				bos = new BufferedOutputStream(clientSocket.getOutputStream());
-
-
-				String uri = bir.toString();
-				String request = bir.readLine().substring(4, uri.length()-4);
-				File fil = new File(request);
-
-
-
-				byte[] buffer = new byte[1024];
-				boolean readAll = true;
-				int nRead = 0;
-				FileInputStream fin = new FileInputStream(fil);
-
-				pw.write(generateHeader(fil));
-
-				while (readAll == true) {
-					nRead = fin.read(buffer);
-					
-					if (nRead == -1) {
-						fin.close();
-						readAll = false;
-					} else {
-						for(int i = 0; i <= nRead - 1; i++) {
-							bos.write(buffer, 0, nRead);
-
-						}
-						bos.flush();
-					}
+			String request = bir.readLine();
+			String[] files = 
+					{"website\\billeder.html","website\\billeder2.html","website\\dtulogo.bmp",
+					"website\\dtulogo.gif","website\\dtulogo.jpg","website\\dtulogo.png",
+					"website\\fejl.html","website\\index.html","website\\lorem.html"};
+			
+			System.out.println(request);
+			
+			for(int i = 0; i < files.length; i++){
+				if(request.contains(files[i].substring(8, files[i].length()))){
+					file = new File(files[i]);
+				} else {
+					file = new File("website\\homepage.html");
 				}
-
-
-				clientSocket.close();
-				client = false;
 			}
-			MyServerSocket.close();
 
-		} catch (IOException e) {
-			e.printStackTrace();
+			pw.write(generateHeader(file));
+			pw.flush();
+
+			byte[] buffer = new byte[1024];
+			//byte[] stringByte = header.getBytes();
+			boolean readAll = false;
+			int nRead = 0;
+			FileInputStream fin = new FileInputStream(file);
+			while(readAll == false) {
+				nRead = fin.read(buffer);
+				if (nRead == -1) {
+					fin.close();
+					readAll = true;
+				} else {
+					for (int i = 0; i <= nRead; i++) {
+						//bos.write(stringByte);
+						bos.write(buffer, 0, nRead);
+					}
+					bos.flush();
+				}
+			}
+			clientSocket.close();
 		}
-
+		MyServerSocket.close();
 	}
-	// HEADER
-	public static String generateHeader(File fil){
+
+	public static String generateHeader(File file){
 		String NNN;
-		if (fil.exists()) {
+		if (file.exists() && !file.isDirectory()) {
 			NNN = "200";
 		} else {
 			NNN = "404";
 		}
-		String file = fil.toString();
+		String fileString = file.toString();
 		String extension = "";
-		int i = file.lastIndexOf(".");
+		int i = fileString.lastIndexOf(".");
 		if(i > 0){
-			extension = file.substring(i+1);
+			extension = fileString.substring(i+1);
 		}
 		if (extension.contains("html")) {
 			extension = "text/" + extension;
@@ -91,17 +82,13 @@ public class serverSide {
 		}
 		String gmtString = "";
 		SimpleDateFormat gmtFormat;
-
 		gmtFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
 		gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		gmtString = gmtFormat.format(Calendar.getInstance().getTime());
-
-
-
-		return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " + fil.length() + "\n" + "Content-Type: " + extension + "\n" + gmtString;
-
-
-
+		if (NNN == "404") {
+			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " + file.length() + "\n" + gmtString;
+		} else {
+			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " + file.length() + "\n" + "Content-Type: " + extension + "\n" + gmtString;
+		}
 	}
-
 }
