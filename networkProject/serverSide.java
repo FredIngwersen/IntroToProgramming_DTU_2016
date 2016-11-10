@@ -11,7 +11,7 @@ public class serverSide {
 		//System.out.println(file);
 		System.out.println(generateHeader(file));
 
-		ServerSocket MyServerSocket = new ServerSocket(80);
+		ServerSocket MyServerSocket = new ServerSocket(8080);
 		boolean serverActive = true;
 		while (serverActive == true) {
 			Socket clientSocket = MyServerSocket.accept();	
