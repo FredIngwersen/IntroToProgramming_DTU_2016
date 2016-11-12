@@ -22,49 +22,52 @@ public class serverSide {
 
 			String request = bir.readLine();
 			String[] files = 
-					{"website\\billeder.html","website\\billeder2.html","website\\dtulogo.bmp",
-					"website\\dtulogo.gif","website\\dtulogo.jpg","website\\dtulogo.png",
-					"website\\fejl.html","website\\index.html","website\\lorem.html"};
-			
+				{"website/billeder.html","website/billeder2.html","website/dtulogo.bmp",
+						"website/dtulogo.gif","website/dtulogo.jpg","website/dtulogo.png",
+						"website/fejl.html","website/index.html","website/lorem.html",
+						"website/homepage.html","website/otherfigures/whostudy.jpg"};
+
 			System.out.println(request);
-			
+
 			for(int i = 0; i < files.length; i++){
 				if(request.contains(files[i].substring(8, files[i].length()))){
 					file = new File(files[i]);
-				} else {
+				} else if(request.length() < 14){
 					file = new File("website\\homepage.html");
 				}
 			}
 
-			pw.write(generateHeader(file));
+			//pw.write(generateHeader(file));
 			pw.flush();
 
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[2048];
 			//byte[] stringByte = header.getBytes();
 			boolean readAll = false;
 			int nRead = 0;
 			FileInputStream fin = new FileInputStream(file);
-			while(readAll == false) {
+
+			while(!readAll) {
 				nRead = fin.read(buffer);
 				if (nRead == -1) {
 					fin.close();
 					readAll = true;
 				} else {
-					for (int i = 0; i <= nRead; i++) {
-						//bos.write(stringByte);
-						bos.write(buffer, 0, nRead);
+					
+					for(int i = 0; i < nRead; i++){
+						bos.write(buffer[i]);
+						bos.flush();
 					}
-					bos.flush();
 				}
 			}
 			clientSocket.close();
 		}
 		MyServerSocket.close();
+		serverActive = false;
 	}
 
 	public static String generateHeader(File file){
 		String NNN;
-		if (file.exists() && !file.isDirectory()) {
+		if (file.exists() && file.isDirectory()) {
 			NNN = "200";
 		} else {
 			NNN = "404";
