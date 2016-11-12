@@ -21,21 +21,28 @@ public class serverSide {
 			//String header = generateHeader(file);
 
 			String request = bir.readLine();
-			String[] files = 
-				{"website/billeder.html","website/billeder2.html","website/dtulogo.bmp",
-						"website/dtulogo.gif","website/dtulogo.jpg","website/dtulogo.png",
-						"website/fejl.html","website/index.html","website/lorem.html",
-						"website/homepage.html","website/otherfigures/whostudy.jpg"};
 
-			System.out.println(request);
-
-			for(int i = 0; i < files.length; i++){
-				if(request.contains(files[i].substring(8, files[i].length()))){
-					file = new File(files[i]);
-				} else if(request.length() < 14){
+			File folder = new File("website/");
+			File[] listOfFiles = folder.listFiles();
+		
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isFile()) {
+					file = new File(listOfFiles[i].getPath().toString());
+					
+				} else if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isDirectory()) {
+					File subFolder = new File(listOfFiles[i].getPath());
+					listOfFiles = subFolder.listFiles();
+					
+					for(int j = 0; j < listOfFiles.length; j++){
+						file = new File(listOfFiles[j].getPath().toString());
+					}
+					
+				} else if(request.length() <= 14){
 					file = new File("website\\homepage.html");
 				}
 			}
+			
+			System.out.println(request);
 
 			//pw.write(generateHeader(file));
 			pw.flush();
