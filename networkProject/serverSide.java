@@ -7,13 +7,16 @@ import java.util.*;
 
 public class serverSide {
 	public static void main (String[] args) throws IOException {
-		File file = new File("");
-		//System.out.println(file);
-		System.out.println(generateHeader(file));
 
+		File file = new File("");
+		//System.out.println(generateHeader(file));  // <-- For testing purposes
+
+		// Sets the localhost port
 		ServerSocket MyServerSocket = new ServerSocket(8080);
+
 		boolean serverActive = true;
-		while (serverActive == true) {
+		while (serverActive) {
+			// Declaring essential variables for connection & I/O
 			Socket clientSocket = MyServerSocket.accept();	
 			BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
@@ -22,44 +25,50 @@ public class serverSide {
 
 			String request = bir.readLine();
 
-			File folder = new File("website/");
-			File[] listOfFiles = folder.listFiles();
-		
+			// Gets all my files in the directory into an array
+			File directory = new File("website/");
+			File[] listOfFiles = directory.listFiles();
+
+			// Compares the request to the files
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isFile()) {
 					file = new File(listOfFiles[i].getPath().toString());
-					
+
+					// Checks if the request contains a directory
 				} else if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isDirectory()) {
-					File subFolder = new File(listOfFiles[i].getPath());
-					listOfFiles = subFolder.listFiles();
-					
+					File subDirectory = new File(listOfFiles[i].getPath());
+					listOfFiles = subDirectory.listFiles();
+
+					// Goes into the subdirectory and creates a pathname 
 					for(int j = 0; j < listOfFiles.length; j++){
 						file = new File(listOfFiles[j].getPath().toString());
 					}
-					
+
+					// If the request contains nothing, goto homepage.html
 				} else if(request.length() <= 14){
 					file = new File("website\\homepage.html");
 				}
 			}
-			
-			System.out.println(request);
+
+			//System.out.println(generateHeader(file));		// <-- For testing purposes
 
 			//pw.write(generateHeader(file));
 			pw.flush();
 
-			byte[] buffer = new byte[2048];
-			//byte[] stringByte = header.getBytes();
-			boolean readAll = false;
-			int nRead = 0;
+			// Declaring variables for sending bytes of info to the user
+			byte[] buffer = new byte[2048];	//byte[] stringByte = header.getBytes();
+			boolean readAll = false; int nRead = 0;
 			FileInputStream fin = new FileInputStream(file);
 
+			// As long as a file has more information, which has not been sent, send it.
+			// Only 2048 bytes are being sent at a time
 			while(!readAll) {
 				nRead = fin.read(buffer);
+
 				if (nRead == -1) {
 					fin.close();
 					readAll = true;
 				} else {
-					
 					for(int i = 0; i < nRead; i++){
 						bos.write(buffer[i]);
 						bos.flush();
@@ -73,15 +82,19 @@ public class serverSide {
 	}
 
 	public static String generateHeader(File file){
+
 		String NNN;
-		if (file.exists() && file.isDirectory()) {
+		// Send request status
+		if (file.exists() && file.isFile()) {
 			NNN = "200";
 		} else {
 			NNN = "404";
 		}
-		String fileString = file.toString();
-		String extension = "";
+
+		String fileString = file.getName(); String extension = "";
 		int i = fileString.lastIndexOf(".");
+
+		// Declaring type of file
 		if(i > 0){
 			extension = fileString.substring(i+1);
 		}
@@ -90,15 +103,20 @@ public class serverSide {
 		} else {
 			extension = "image/" + extension;
 		}
-		String gmtString = "";
-		SimpleDateFormat gmtFormat;
-		gmtFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+
+		// Declaring current date & time
+		SimpleDateFormat gmtFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
 		gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		gmtString = gmtFormat.format(Calendar.getInstance().getTime());
+		String gmtString = gmtFormat.format(Calendar.getInstance().getTime());
+
+		// Return full header
 		if (NNN == "404") {
-			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " + file.length() + "\n" + gmtString;
+			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " +
+					file.length() + "\n" + gmtString;
+
 		} else {
-			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " + file.length() + "\n" + "Content-Type: " + extension + "\n" + gmtString;
+			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " +
+					file.length() + "\n" + "Content-Type: " + extension + "\n" + gmtString;
 		}
 	}
 }
