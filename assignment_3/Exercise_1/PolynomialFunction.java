@@ -10,10 +10,10 @@ public class PolynomialFunction extends Function {
 	
 	public double evaluate(double x){
 		int n = a.length;
-		int sum = 0;
+		double sum = 0;
 		
 		for (int i = 0 ; i < n ; i++){
-			sum+=Math.pow(a[i]*x, i);
+			sum = sum + (a[i] * Math.pow(x, i));
 		}
 		return sum;
 	}
