@@ -50,7 +50,7 @@ public class serverSide {
 				}
 			}
 
-			//System.out.println(generateHeader(file));		// <-- For testing purposes
+			System.out.println(generateHeader(file));		// <-- For testing purposes
 
 			//pw.write(generateHeader(file));
 			pw.flush();
