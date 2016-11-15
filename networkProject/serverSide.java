@@ -46,7 +46,7 @@ public class serverSide {
 
 					// If the request contains nothing, goto homepage.html
 				} else if(request.length() <= 14){
-					file = new File("website\\homepage.html");
+					file = new File("website/homepage.html");
 				}
 			}
 
