@@ -38,11 +38,10 @@ public class Simulation {
 			for (int j = 0; j < vehicles.length; j++) {
 				// Draw and then move a vehicles
 				drawVehicle(vehicles[j]);
-				//vehicles[j].move();
+				vehicles[j].move();
 			}
 			// show the new situation and pause 100 milliseconds
 			StdDraw.show(100);
-
 		}
 	}
 
@@ -57,6 +56,7 @@ public class Simulation {
 		StdDraw.setPenColor(vehicle.getColor());
 		StdDraw.filledSquare(vehicle.getPosition().x, vehicle.getPosition().y, vehicle.getSize());
 	}
+
 
 	/**
 	 * Initializes the graphics and creates the vehicles.
