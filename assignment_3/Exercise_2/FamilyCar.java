@@ -4,11 +4,12 @@ import java.awt.*;
  * Created by William Ben Embarek on 14/11/2016.
  */
 public class FamilyCar extends Vehicle{
-	Point position = getPosition();
 	public FamilyCar() {
 		vehicleC = Color.blue;
 		size = 1;
 		speed = 1;
+		position = setValidPosition();
+
 	}
 
 	public void move() {
@@ -18,7 +19,7 @@ public class FamilyCar extends Vehicle{
 			direction = direction(direction, speed);
 			if (direction == 1) {
 				position.translate(speed,0);
-				// DIVERSERION FOR BILEN - SÅ DEN KAN RYKKE HØJRE OG VENSTRE!
+				// DIVERSERION FOR BILEN - Sï¿½ DEN KAN RYKKE Hï¿½JRE OG VENSTRE!
 				if (Math.random() < 0.3) {
 					if (Math.random() < 0.3) {
 						if (position.getY() < Simulation.TRACKWIDTH - size) {   
@@ -90,29 +91,24 @@ public class FamilyCar extends Vehicle{
 			break;
 		}
 	}
-	public String hitWall()
-	{
+	public String hitWall() {
 		if (direction == 1) {
-			if (position.getX() + calcSpeed() > Simulation.TRACKSIZE - size)
-			{
-				return "Right";
-			}
-		} else if (direction == 0) {
-			if (position.getY() + calcSpeed() > Simulation.TRACKSIZE - size)
-			{
-				return "Top";
-			}
-		} else if (direction == 3) {
-			if (position.getX() - calcSpeed() < 0+size)
-			{
-				return "Left";
-			}
-		} else if (direction == 2) {
-			if (position.getY() - calcSpeed() < 0+size)
-			{
-				return "Bottom";
-			}
-		}
+            if (position.getX() + speed > Simulation.TRACKSIZE - (size+1)) {
+                return "Right";
+            }
+        } else if (direction == 0) {
+            if (position.getY() + speed > Simulation.TRACKSIZE - (size+1)) {
+                return "Top";
+            }
+        } else if (direction == 3) {
+            if (position.getX() - speed < (size+1)) {
+                return "Left";
+            }
+        } else if (direction == 2) {
+            if (position.getY() - speed < (size+1)) {
+                return "Bottom";
+            }
+        }
 		return "Null";
 	}
 	public int calcSpeed() {
@@ -124,6 +120,27 @@ public class FamilyCar extends Vehicle{
 			speed = 2;
 		}
 		return speed;
+	}
+	public Point setValidPosition(){
+
+		int vSize = size;
+		int tWidth = Simulation.TRACKWIDTH-1-(vSize*2);
+		int tSize = Simulation.TRACKSIZE-(vSize*2);
+		int randomInt = (int)(Math.random() * 100);
+
+		if(randomInt <= 25){
+			return new Point(((int)(Math.random() * tWidth))+vSize,
+					((int)(Math.random() * tSize))+vSize);
+		} else if(randomInt > 25 && randomInt <= 50){
+			return new Point((int)(Math.random() * tSize)+vSize,
+					((int)(Math.random() * tWidth))+vSize);
+		} else if(randomInt > 50 && randomInt <= 75){
+			return new Point(((int)(Math.random() * tWidth))+(2*Simulation.TRACKWIDTH)+vSize,
+					((int)(Math.random() * tSize))+vSize);
+		} else{
+			return new Point(((int)(Math.random() * tSize))+vSize,
+					((int)(Math.random() * tWidth))+(2*Simulation.TRACKWIDTH)+vSize);
+		}
 	}
 
 	public Color getColor() {
