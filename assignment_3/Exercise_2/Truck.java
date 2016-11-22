@@ -1,3 +1,5 @@
+package assignment_3.Exercise_2;
+
 import java.awt.*;
 
 /**
