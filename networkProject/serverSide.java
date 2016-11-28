@@ -16,66 +16,67 @@ public class serverSide {
 
 		boolean serverActive = true;
 		while (serverActive) {
-			// Declaring essential variables for connection & I/O
-			Socket clientSocket = MyServerSocket.accept();	
-			BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
-			BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
-			//String header = generateHeader(file);
+			try {
+				// Declaring essential variables for connection & I/O
+				Socket clientSocket = MyServerSocket.accept();	
+				BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
+				BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
+				//String header = generateHeader(file);
 
-			String request = bir.readLine();
+				String request = bir.readLine();
 
-			// Gets all my files in the directory into an array
-			File directory = new File("website/");
-			File[] listOfFiles = directory.listFiles();
+				// Gets all my files in the directory into an array
+				File directory = new File("website/");
+				File[] listOfFiles = directory.listFiles();
 
-			// Compares the request to the files
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isFile()) {
-					file = new File(listOfFiles[i].getPath().toString());
+				// Compares the request to the files
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isFile()) {
+						file = new File(listOfFiles[i].getPath().toString());
 
-					// Checks if the request contains a directory
-				} else if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isDirectory()) {
-					File subDirectory = new File(listOfFiles[i].getPath());
-					listOfFiles = subDirectory.listFiles();
+						// Checks if the request contains a directory
+					} else if (request.contains(listOfFiles[i].getName()) && listOfFiles[i].isDirectory()) {
+						File subDirectory = new File(listOfFiles[i].getPath());
+						listOfFiles = subDirectory.listFiles();
 
-					// Goes into the subdirectory and creates a pathname 
-					for(int j = 0; j < listOfFiles.length; j++){
-						file = new File(listOfFiles[j].getPath().toString());
-					}
+						// Goes into the subdirectory and creates a pathname 
+						for(int j = 0; j < listOfFiles.length; j++){
+							file = new File(listOfFiles[j].getPath().toString());
+						}
 
-					// If the request contains nothing, goto homepage.html
-				} else if(request.length() <= 14){
-					file = new File("website/homepage.html");
-				}
-			}
-
-			System.out.println(generateHeader(file));		// <-- For testing purposes
-
-			//pw.write(generateHeader(file));
-			pw.flush();
-
-			// Declaring variables for sending bytes of info to the user
-			byte[] buffer = new byte[2048];	//byte[] stringByte = header.getBytes();
-			boolean readAll = false; int nRead = 0;
-			FileInputStream fin = new FileInputStream(file);
-
-			// As long as a file has more information, which has not been sent, send it.
-			// Only 2048 bytes are being sent at a time
-			while(!readAll) {
-				nRead = fin.read(buffer);
-
-				if (nRead == -1) {
-					fin.close();
-					readAll = true;
-				} else {
-					for(int i = 0; i < nRead; i++){
-						bos.write(buffer[i]);
-						bos.flush();
+						// If the request contains nothing, goto homepage.html
+					} else if(request.length() <= 14){
+						file = new File("website/homepage.html");
 					}
 				}
+
+				System.out.println(generateHeader(file));		// <-- For testing purposes
+
+				// Declaring variables for sending bytes of info to the user
+				byte[] buffer = new byte[2048];	//byte[] stringByte = header.getBytes();
+				boolean readAll = false; int nRead = 0;
+				FileInputStream fin = new FileInputStream(file);
+
+				// As long as a file has more information, which has not been sent, send it.
+				// Only 2048 bytes are being sent at a time
+				while(!readAll) {
+					nRead = fin.read(buffer);
+
+					if (nRead == -1) {
+						fin.close();
+						readAll = true;
+					} else {
+						for(int i = 0; i < nRead; i++){
+							bos.write(buffer[i]);
+							bos.flush();
+						}
+					}
+				}
+				clientSocket.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			clientSocket.close();
 		}
 		MyServerSocket.close();
 		serverActive = false;
