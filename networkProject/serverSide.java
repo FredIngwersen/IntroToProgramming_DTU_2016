@@ -12,7 +12,7 @@ public class serverSide {
 		//System.out.println(generateHeader(file));  // <-- For testing purposes
 
 		// Sets the localhost port
-		ServerSocket MyServerSocket = new ServerSocket(8080);
+		ServerSocket MyServerSocket = new ServerSocket(80);
 
 		boolean serverActive = true;
 		while (serverActive) {
