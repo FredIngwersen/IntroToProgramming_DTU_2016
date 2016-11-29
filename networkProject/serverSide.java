@@ -42,7 +42,10 @@ public class serverSide {
 
 						// Goes into the subdirectory and creates a pathname 
 						for(int j = 0; j < listOfFiles.length; j++){
-							file = new File(listOfFiles[j].getPath().toString());
+							if (request.contains(listOfFiles[j].getName()) && listOfFiles[j].isFile()) {
+								file = new File(listOfFiles[j].getPath().toString());
+							}
+
 						}
 
 						// If the request contains nothing, goto homepage.html
@@ -50,15 +53,15 @@ public class serverSide {
 						file = new File("website/homepage.html");
 					}
 				}
-				
-				pw.write(generateHeader(file));
-				pw.flush();
+
 				System.out.println(generateHeader(file));		// <-- For testing purposes
 
 				// Declaring variables for sending bytes of info to the user
 				byte[] buffer = new byte[2048];	//byte[] stringByte = header.getBytes();
 				boolean readAll = false; int nRead = 0;
 				FileInputStream fin = new FileInputStream(file);
+
+				bos.write(generateHeader(file).getBytes());
 				
 				// As long as a file has more information, which has not been sent, send it.
 				// Only 2048 bytes are being sent at a time
@@ -69,19 +72,20 @@ public class serverSide {
 						fin.close();
 						readAll = true;
 					} else {
-						for(int i = 0; i < nRead; i++){
-							bos.write(buffer[i]);
-							bos.flush();
-						}
+
+						bos.write(buffer);
 					}
+					bos.flush();
 				}
+				clientSocket.shutdownInput();
+				clientSocket.shutdownOutput();
 				clientSocket.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		MyServerSocket.close();
 		serverActive = false;
+		MyServerSocket.close();
 	}
 
 	public static String generateHeader(File file){
@@ -115,12 +119,12 @@ public class serverSide {
 		// Return full header
 		if (NNN == "404") {
 			return "HTTP/1.0 " + NNN +" Not Found"+ "\n" + "Content-Length: " +
-					file.length() + "\n" + gmtString + "\n";
+					file.length() + "\n" + gmtString + "\n\n";
 
 		} else {
 			return "HTTP/1.0 " + NNN +" OK"+ "\n" + "Content-Length: " +
 					file.length() + "\n" + "Content-Type: " + extension + "\n" +
-					gmtString + "\n";
+					gmtString + "\n\n";
 		}
 	}
 }
