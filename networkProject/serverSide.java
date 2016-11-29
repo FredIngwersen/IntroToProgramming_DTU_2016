@@ -50,14 +50,16 @@ public class serverSide {
 						file = new File("website/homepage.html");
 					}
 				}
-
+				
+				pw.write(generateHeader(file));
+				pw.flush();
 				System.out.println(generateHeader(file));		// <-- For testing purposes
 
 				// Declaring variables for sending bytes of info to the user
 				byte[] buffer = new byte[2048];	//byte[] stringByte = header.getBytes();
 				boolean readAll = false; int nRead = 0;
 				FileInputStream fin = new FileInputStream(file);
-
+				
 				// As long as a file has more information, which has not been sent, send it.
 				// Only 2048 bytes are being sent at a time
 				while(!readAll) {
@@ -112,12 +114,13 @@ public class serverSide {
 
 		// Return full header
 		if (NNN == "404") {
-			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " +
-					file.length() + "\n" + gmtString;
+			return "HTTP/1.0 " + NNN +" Not Found"+ "\n" + "Content-Length: " +
+					file.length() + "\n" + gmtString + "\n";
 
 		} else {
-			return "HTTP/1.0 " + NNN + "\n" + "Content-Length: " +
-					file.length() + "\n" + "Content-Type: " + extension + "\n" + gmtString;
+			return "HTTP/1.0 " + NNN +" OK"+ "\n" + "Content-Length: " +
+					file.length() + "\n" + "Content-Type: " + extension + "\n" +
+					gmtString + "\n";
 		}
 	}
 }
