@@ -20,7 +20,6 @@ public class serverSide {
 				// Declaring essential variables for connection & I/O
 				Socket clientSocket = MyServerSocket.accept();	
 				BufferedReader bir = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
 				BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOutputStream());
 				//String header = generateHeader(file);
 
@@ -75,8 +74,10 @@ public class serverSide {
 
 						bos.write(buffer);
 					}
-					bos.flush();
 				}
+				// Flush if there is any more information to be sent
+				bos.flush();
+				
 				clientSocket.shutdownInput();
 				clientSocket.shutdownOutput();
 				clientSocket.close();
